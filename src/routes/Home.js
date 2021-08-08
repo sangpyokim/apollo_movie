@@ -8,10 +8,19 @@ const GET_MOVIES = gql`
   {
     movies {
       id
+      title
       medium_cover_image
     }
   }
 `;
+
+
+const List = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 100px;
+  grid-row-gap: 100px;
+`
 
 const Container = styled.div`
   display: flex;
@@ -56,10 +65,12 @@ export default () => {
         <Title>Apollo 2020</Title>
         <Subtitle>I love GraphQL</Subtitle>
       </Header>
-      {loading && <Loading>Loading...</Loading>}
-      {!loading &&
-        data.movies &&
-        data.movies.map(m => <Movie key={m.id} id={m.id} />)}
+      <List>
+        {loading && <Loading>Loading...</Loading>}
+        {!loading &&
+          data.movies &&
+          data.movies.map(m => <Movie key={m.id} title={m.title} id={m.id} img={m.medium_cover_image} />)}
+      </List>
     </Container>
   );
 };
