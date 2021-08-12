@@ -4,6 +4,30 @@ import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/react-hooks";
 import styled from 'styled-components';
 
+const Loading = styled.div`
+  background-color: rgba(25, 25, 25, 0.9);
+  font-size:36px;
+  height:100vh;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+`
+
+
+const DesIntro = styled.div`
+  font-size:16px;
+`
+
+const Title = styled.div`
+  font-size: 36px;
+`
+
+const Star = styled.div`
+  margin: 20px 0 20px 0;
+`
+
 const GET_MOVIE = gql`
   query getMovie($id: Int!) {
     movie(id: $id) {
@@ -16,17 +40,32 @@ const GET_MOVIE = gql`
   }
 `;
 
-const Backgound = styled.div``
+const Backgound = styled.img`
+position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-size: cover;
+  filter: blur(4px);
+  opacity: 0.3;
+  z-index: 0;
+`
 
 const Des = styled.div`
+margin-right:20px;
+width: 350px;
 `
 
 const Movie = styled.div`
   display:flex;
+  z-index:1;
 `
 
 const Img = styled.img`
-  width:350px;
+  width:450px;
+  opacity:1;
 `
 
 const Container = styled.div`
@@ -36,6 +75,7 @@ const Container = styled.div`
   align-items: center;
   width:100%;
   height:100vh;
+  color:white;
 `
 
 export default () => {
@@ -45,22 +85,27 @@ export default () => {
   });
 
   return (
+    <>
+      { loading && <Loading>Loading...</Loading> }
     <Container>
-      { loading && <div>loading</div> }
-      <Backgound  />
+      <Backgound  src={ data && data.movie && data.movie.medium_cover_image } />
       <Movie>
       
         <Des>
-          { data && data.movie && data.movie.title }
-          { data && data.movie && data.movie.rating }
-          { data && data.movie && data.movie.description_intro.substring(0,50) }
+          <Title>
+            { data && data.movie && data.movie.title }
+          </Title>
+          <Star>
+            { data && data.movie && data.movie.rating } / 10.0
+          </Star>
+          <DesIntro>
+            { data && data.movie && data.movie.description_intro }
+          </DesIntro>
         </Des>
-
-          
-        <Img src={data.movie.medium_cover_image} />
+        <Img src={ data && data.movie && data.movie.medium_cover_image } ></Img>
       </Movie>
     </Container>
-    
-  )
-}
-;
+    </>
+    )
+  }
+   
